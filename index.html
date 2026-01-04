@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="loginPage" class="page active">
+        <div class="login-box">
+            <div class="college-info">
+                <h1>Pravin Patil College of Engineering</h1>
+                <p>Teacher Attendance System</p>
+            </div>
+            
+            <div class="login-form">
+                <h2>Teacher Login</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label>Username:</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardPage" class="page">
+        <div class="header">
+            <h1>Teacher Dashboard</h1>
+            <button onclick="logout()">Logout</button>
+        </div>
+        
+        <div class="dashboard">
+            <h2>Choose Option:</h2>
+            <div class="options">
+                <div class="option" onclick="showPage('markAttendancePage')">
+                    <h3>Mark Attendance</h3>
+                    <p>Take attendance for students</p>
+                </div>
+                <div class="option" onclick="showPage('viewReportsPage')">
+                    <h3>View Reports</h3>
+                    <p>See attendance reports</p>
+                </div>
+                <div class="option" onclick="showPage('manageStudentsPage')">
+                    <h3>Manage Students</h3>
+                    <p>Add or edit students</p>
+                </div>
+                <div class="option" onclick="showPage('settingsPage')">
+                    <h3>Settings</h3>
+                    <p>Change settings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="markAttendancePage" class="page">
+        <div class="header">
+            <button onclick="showPage('dashboardPage')">Back</button>
+            <h1>Mark Attendance</h1>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h3>Select Details:</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <select id="classSelect" onchange="loadStudents()">
+                            <option value="">Select Class</option>
+                            <option value="CO-A">Computer Engineering - A</option>
+                            <option value="CO-B">Computer Engineering - B</option>
+                            <option value="CO-C">Computer Engineering - C</option>
+                            <option value="Civil-A">Civil Engineering - A</option>
+                            <option value="Civil-B">Civil Engineering - B</option>
+                            <option value="Civil-C">Civil Engineering - C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject:</label>
+                        <select id="subjectSelect">
+                            <option value="">Select Subject</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Algorithms">Algorithms</option>
+                            <option value="Database">Database</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Structural Analysis">Structural Analysis</option>
+                            <option value="Concrete Technology">Concrete Technology</option>
+                            <option value="Surveying">Surveying</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date:</label>
+                        <input type="date" id="dateSelect">
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-section">
+                <h3>Student List:</h3>
+                <table id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentList">
+                        <tr><td colspan="4">Select a class first</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="buttons">
+                <button onclick="submitAttendance()">Submit Attendance</button>
+                <button onclick="clearAttendance()">Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewReportsPage" class="page">
+        <div class="header">
+            <button onclick="showPage('dashboardPage')">Back</button>
+            <h1>Attendance Reports</h1>
+        </div>
+        
+        <div class="content">
+            <div class="filters">
+                <h3>Filter Reports:</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <select id="reportClass">
+                            <option value="">All Classes</option>
+                            <option value="CO-A">Computer Engineering - A</option>
+                            <option value="CO-B">Computer Engineering - B</option>
+                            <option value="CO-C">Computer Engineering - C</option>
+                            <option value="Civil-A">Civil Engineering - A</option>
+                            <option value="Civil-B">Civil Engineering - B</option>
+                            <option value="Civil-C">Civil Engineering - C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject:</label>
+                        <select id="reportSubject">
+                            <option value="">All Subjects</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Algorithms">Algorithms</option>
+                            <option value="Database">Database</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Structural Analysis">Structural Analysis</option>
+                            <option value="Concrete Technology">Concrete Technology</option>
+                            <option value="Surveying">Surveying</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        <input type="date" id="dateFrom">
+                    </div>
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        <input type="date" id="dateTo">
+                    </div>
+                </div>
+                <button onclick="generateReport()">Generate Report</button>
+            </div>
+
+            <div class="report-stats">
+                <div class="stat">
+                    <h4>Total Students</h4>
+                    <span id="totalStudents">0</span>
+                </div>
+                <div class="stat">
+                    <h4>Present Today</h4>
+                    <span id="presentToday">0</span>
+                </div>
+                <div class="stat">
+                    <h4>Absent Today</h4>
+                    <span id="absentToday">0</span>
+                </div>
+            </div>
+
+            <div class="report-table">
+                <table id="reportTable">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportData">
+                        <tr><td colspan="6">No data found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="manageStudentsPage" class="page">
+        <div class="header">
+            <button onclick="showPage('dashboardPage')">Back</button>
+            <h1>Manage Students</h1>
+        </div>
+        
+        <div class="content">
+            <div class="search-section">
+                <input type="text" id="studentSearchInput" placeholder="Search students..." onkeyup="filterStudents()">
+                <button onclick="showAddStudentModal()">Add Student</button>
+            </div>
+
+            <div class="students-table">
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsPage" class="page">
+        <div class="header">
+            <button onclick="showPage('dashboardPage')">Back</button>
+            <h1>Settings</h1>
+        </div>
+        
+        <div class="content">
+            <div class="settings-section">
+                <h3>Profile Settings</h3>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="teacherName" value="Teacher">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="teacherEmail" value="teacher@ppce.edu">
+                    </div>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="settings-section">
+                <h3>Change Password</h3>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label>Current Password:</label>
+                        <input type="password" id="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password:</label>
+                        <input type="password" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password:</label>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                    <button type="submit">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Student</h3>
+                <button onclick="closeAddStudentModal()">&times;</button>
+            </div>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="newStudentName" required>
+                </div>
+                <div class="form-group">
+                    <label>Roll Number:</label>
+                    <input type="text" id="newStudentRoll" required>
+                </div>
+                <div class="form-group">
+                    <label>Class:</label>
+                    <select id="newStudentClass" required>
+                        <option value="">Select Class</option>
+                        <option value="CO-A">Computer Engineering - A</option>
+                        <option value="CO-B">Computer Engineering - B</option>
+                        <option value="CO-C">Computer Engineering - C</option>
+                        <option value="Civil-A">Civil Engineering - A</option>
+                        <option value="Civil-B">Civil Engineering - B</option>
+                        <option value="Civil-C">Civil Engineering - C</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="newStudentEmail">
+                </div>
+                <div class="form-group">
+                    <label>Phone:</label>
+                    <input type="tel" id="newStudentPhone">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" onclick="closeAddStudentModal()">Cancel</button>
+                    <button type="submit">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
